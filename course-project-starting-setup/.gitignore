@@ -2,5 +2,5 @@
 .DS_Store
 Thumbs.db
 
-.idea
+# Project folders to be excluded:
 node_modules/
