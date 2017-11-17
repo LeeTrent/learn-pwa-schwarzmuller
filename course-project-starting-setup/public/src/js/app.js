@@ -9,3 +9,10 @@ if ( 'serviceWorker' in navigator) {
 } else {
     console.log('[app.js] serviceWorker NOT SUPPORTED');
 }
+
+var deferredPromptEvent;
+window.addEventListener('beforeinstallprompt', function(event) {
+    console.log('[app.js] beforeinstallprompt fired ...');
+    deferredPromptEvent = event;
+    return false;
+});
