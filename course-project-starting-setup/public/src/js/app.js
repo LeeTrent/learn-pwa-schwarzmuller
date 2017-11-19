@@ -1,3 +1,14 @@
+//////////////////////////////
+// BEGIN: Add polyfill support 
+// if browser does not support
+// Javascript Promises and the
+// Fetch API
+//////////////////////////////
+if ( ! window.Promise ) {
+    window.Promise = Promise;
+}
+//////////////////////////////
+
 if ( 'serviceWorker' in navigator) {
     console.log('[app.js] serviceWorker supported ...');
     console.log('[app.js] Registering serviceWorker ...');
