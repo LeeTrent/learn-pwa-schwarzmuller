@@ -18,6 +18,27 @@ window.addEventListener('beforeinstallprompt', function(event) {
 });
 
 //////////////////////////////////////////////////
+// BEGIN: AJAX GET Example
+//////////////////////////////////////////////////
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'http://httpbin.org/ip');
+xhr.responseType = 'json';
+xhr.onload = function() {
+    console.log('BEGIN: [app.js/ajax/get/onload:'); 
+    console.log(xhr.response);
+    console.log('END: [app.js/ajax/get/onload:');
+};
+xhr.onerror = function() {
+    console.log('BEGIN: [app.js/ajax/get/onerror:'); 
+    console.log(xhr.response);
+    console.log('END: [app.js/ajax/get/onerror:');
+};
+xhr.send();
+//////////////////////////////////////////////////
+// END: AJAX GET Example
+//////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
 // BEGIN: Fetch GET Example
 //////////////////////////////////////////////////
 fetch('http://httpbin.org/ip')
