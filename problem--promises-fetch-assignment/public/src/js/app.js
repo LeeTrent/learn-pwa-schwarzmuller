@@ -5,6 +5,7 @@ var output = document.querySelector('#output');
 button.addEventListener('click', function() {
   // Create a new Promise here and use setTimeout inside the function you pass to the constructor
   var promise = new Promise( function(resolve, reject) {
+    console.log("Timeout set ...");
     setTimeout( function() {
       console.log("Resolving url ...");
       resolve('https://swapi.co/api/people/1');
@@ -15,14 +16,13 @@ button.addEventListener('click', function() {
     return fetch(url); // GET Request is the default - no config required
   })
   .then(function(response) {
-    console.log("Processing response returned by url ...");
+    console.log("Processing response ...");
     return response.json();
   })
   .then(function(data) {
     console.log("Assigning processed data to to 'output' div tag ...");
     output.textContent = data.name;
-  })
- 
+  });
 
   // Handle the Promise "response" (=> the value you resolved) and return a fetch()
   // call to the value (= URL) you resolved (use a GET request)
