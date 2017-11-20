@@ -1,0 +1,6 @@
+# System Files
+.DS_Store
+Thumbs.db
+
+# Project folders to be excluded:
+node_modules/
