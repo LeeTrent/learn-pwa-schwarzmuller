@@ -12,7 +12,7 @@ button.addEventListener('click', function() {
     console.log("'GET' Timeout set ...");
     setTimeout( function() {
       console.log("Resolving url ...");
-      resolve('https://swapi.co/api/people/1');
+      resolve('https://swapi.co/api/xxpeople/1');
     }, 3000);
   })
   .then( function(url) {
@@ -26,6 +26,10 @@ button.addEventListener('click', function() {
   .then(function(data) {
     console.log("Assigning processed data to to 'output' div tag ...");
     output.textContent = data.name;
+  })
+  .catch( function(error) {
+    console.log("Processing GET error ...");
+    console.log(error);
   });
   //////////////////////////////////////////////////////
   // END: 'GET' Request
@@ -38,7 +42,7 @@ button.addEventListener('click', function() {
     console.log("'PUT' Timeout set ...");
     setTimeout( function() {
       console.log("Resolving PUT url ...");
-      resolve('https://httpbin.org/put');
+      resolve('https://httpbin.org/puts');
     }, 3000);
   })
   .then( function(url) {
@@ -62,6 +66,10 @@ button.addEventListener('click', function() {
   .then(function(data) {
     console.log("Assigning processed data to to 'output' div tag ...");
     output2.textContent = data.json.person.name + ' / ' + data.json.person.age;
+  })
+  .catch( function(error) {
+    console.log("Processing PUT error ...");
+    console.log(error);
   });
   //////////////////////////////////////////////////////
   // END: 'PUT' Request
