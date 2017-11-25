@@ -29,19 +29,69 @@ self.addEventListener('activate', function(event) {
   return self.clients.claim();
 });
 
+// self.addEventListener('fetch', function(event) {
+//   console.log('[lee-sw.js] In fetch event listener ...')
+//   event.respondWith(
+//     caches.match(event.request)
+//       .then(function(response) {
+//         if (response) {
+//           console.log('BEGIN: [lee-sw.js] *** Match in cache found ***');
+//           console.log(response);
+//           console.log('END: [lee-sw.js] *** Match in cache found ***');
+//           return response;
+//         } else {
+//           //console.log('[sw.js] Match in cache NOT FOUND');
+//           return fetch(event.request);
+//         }
+//       })
+//   );
+// });
+
+// self.addEventListener('fetch', function(event) {
+//   console.log('[lee-sw.js] In fetch event listener ...')
+//   event.respondWith(
+//     caches.match(event.request)
+//       .then(function(response) {
+//         if (response) {
+//           console.log('BEGIN: [lee-sw.js] *** Match in cache found ***');
+//           console.log(response);
+//           console.log('END: [lee-sw.js] *** Match in cache found ***');
+//           return response;
+//         } else {
+//           console.log('[sw.js] Match in cache NOT FOUND');
+//           return fetch(event.request)
+//             .then(function(resp) {
+//               console.log('[sw.js] Opening dynamic cache ...');
+//               return caches.open('lee-dynamic')
+//                 .then(function(cache) {
+//                   console.log('BEGIN: [sw.js] PUT in dynamic cache ...')
+//                   cache.put(event.request.url, resp.clone());
+//                   console.log(event.request.url);
+//                   console.log(resp);
+//                   console.log('END: [sw.js] PUT in dynamic cache')
+//                   return resp;
+//                 })
+//             });
+//         }
+//       })
+//   );
+// });
+
 self.addEventListener('fetch', function(event) {
-  console.log('[lee-sw.js] In fetch event listener ...')
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
         if (response) {
-          console.log('BEGIN: [lee-sw.js] *** Match in cache found ***');
-          console.log(response);
-          console.log('END: [lee-sw.js] *** Match in cache found ***');
           return response;
         } else {
-          //console.log('[sw.js] Match in cache NOT FOUND');
-          return fetch(event.request);
+          return fetch(event.request)
+            .then(function(res) {
+              caches.open('lee-dynamic')
+                .then(function(cache) {
+                  cache.put(event.request.url, res.clone());
+                  return res;
+                })
+            });
         }
       })
   );
