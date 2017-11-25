@@ -27,11 +27,6 @@ self.addEventListener('install', function(event) {
   );
  });
 
-// self.addEventListener('activate', function(event) {
-//   console.log('[lee-sw.js] Activating Service Worker ....', event);
-//   return self.clients.claim();
-// });
-
 self.addEventListener('activate', function(event) {
   console.log('[lee-sw.js] Activating Service Worker ....', event);
   event.waitUntil(
