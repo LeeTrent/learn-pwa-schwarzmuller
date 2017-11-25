@@ -1,7 +1,10 @@
+var CACHE_VERSION_STATIC    = 'lee-app-shell-v4';
+var CACHE_VERSION_DYNAMIC   = 'lee-dynamic';
+
 self.addEventListener('install', function(event) {
   console.log('[lee-sw.js] Installing Service Worker ...', event);
   event.waitUntil (
-    caches.open('lee-app-shell')
+    caches.open(CACHE_VERSION_STATIC)
       .then(function(cache) {
         console.log('BEGIN: [lee-sw.js] Pre-caching App Shell ...');
         cache.addAll([
@@ -24,8 +27,25 @@ self.addEventListener('install', function(event) {
   );
  });
 
+// self.addEventListener('activate', function(event) {
+//   console.log('[lee-sw.js] Activating Service Worker ....', event);
+//   return self.clients.claim();
+// });
+
 self.addEventListener('activate', function(event) {
   console.log('[lee-sw.js] Activating Service Worker ....', event);
+  event.waitUntil(
+    caches.keys()
+      .then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if ( key != CACHE_VERSION_STATIC
+                && key != CACHE_VERSION_DYNAMIC ) {
+                console.log('[lee-sw.js] Removing old cache ...', key);
+                return caches.delete(key)
+          }
+        }));
+      })
+  );
   return self.clients.claim();
 });
 
@@ -38,11 +58,13 @@ self.addEventListener('fetch', function(event) {
         } else {
           return fetch(event.request)
             .then(function(res) {
-              caches.open('lee-dynamic')
+              caches.open(CACHE_VERSION_DYNAMIC)
                 .then(function(cache) {
                   cache.put(event.request.url, res.clone());
                   return res;
                 })
+            })
+            .catch(function(err ){
             });
         }
       })
