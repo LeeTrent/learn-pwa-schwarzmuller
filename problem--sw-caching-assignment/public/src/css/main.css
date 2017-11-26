@@ -3,8 +3,11 @@
   width: 100px;
   height: 100px;
   background-color: #fa923f;
-  background-color: red;
+  /*border: 10px double blue;*/
+  /*background-color: red;
   border: 10px double navy;
+  */
+
   display: none;
 }
 

@@ -1,5 +1,5 @@
-var CACHE_VERSION_STATIC    = 'swca-static-v1';
-var CACHE_VERSION_DYNAMIC   = 'swca-dynamic-v1';
+var CACHE_VERSION_STATIC    = 'swca-static-v4';
+var CACHE_VERSION_DYNAMIC   = 'swca-dynamic-v4';
 
 self.addEventListener('install', function(event) {
   console.log('[SWCA/main.js] Installing Service Worker ...', event);
@@ -41,3 +41,50 @@ self.addEventListener('install', function(event) {
     );
     return self.clients.claim();
   });
+
+  self.addEventListener('fetch', function(event) {
+    event.respondWith(
+      caches.match(event.request)
+        .then(function(response) {
+          if (response) {
+            return response;
+          } else {
+            return fetch(event.request)
+              .then(function(res) {
+                return caches.open(CACHE_VERSION_DYNAMIC)
+                  .then(function(cache) {
+                    cache.put(event.request.url, res.clone());
+                    return res;
+                  })
+              })
+              .catch(function(err ){
+              });
+          }
+        })
+    );
+  });
+
+  // self.addEventListener('fetch', function(event) {
+  //   //console.log('[SWCA/sw.js] fetch ....', event.request);
+  //   event.respondWith(
+  //     caches.match(event.request)
+  //       .then(function(response) {
+  //         if (response) {
+  //           console.log('[SWCA/sw.js] Asset found in cache', response);
+  //           return response;
+  //         } else {
+  //           return fetch(event.request)
+  //             .then(function(res) {
+  //               caches.open(CACHE_VERSION_DYNAMIC)
+  //                 .then(function(cache) {
+  //                   cache.put(event.request.url, res.clone());
+  //                   return res;
+  //                 })
+  //             })
+  //             .catch(function(err){
+  //               console.log(err)
+  //             });
+  //         }
+  //       })
+  //   );
+  // });
