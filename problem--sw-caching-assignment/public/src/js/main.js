@@ -20,3 +20,28 @@ button.addEventListener('click', function(event) {
 // 8) Add dynamic caching (with versioning) to cache everything in your app when visited/ fetched by the user
 
 // Important: Clear your Application Storage first to get rid of the old SW & Cache from the Main Course Project!
+
+
+var deferredPrompt;
+
+if (!window.Promise) {
+  window.Promise = Promise;
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(function () {
+      console.log('[SWCA/main.js] Service worker (sw.js) registered!');
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+}
+
+window.addEventListener('beforeinstallprompt', function(event) {
+  console.log('[SWCA/main.js] beforeinstallprompt fired');
+  event.preventDefault();
+  deferredPrompt = event;
+  return false;
+});
