@@ -24,3 +24,20 @@ self.addEventListener('install', function(event) {
     })
   );
  });
+
+ self.addEventListener('activate', function(event) {
+    console.log('[SWCA/sw.js] Activating Service Worker ....', event);
+    event.waitUntil(
+      caches.keys()
+        .then(function(keyList) {
+          return Promise.all(keyList.map(function(key) {
+            if ( key != CACHE_VERSION_STATIC
+                  && key != CACHE_VERSION_DYNAMIC ) {
+                  console.log('[SWCA/sw.js] Removing old cache ...', key);
+                  return caches.delete(key)
+            }
+          }));
+        })
+    );
+    return self.clients.claim();
+  });
