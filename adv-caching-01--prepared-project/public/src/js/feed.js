@@ -30,8 +30,20 @@ shareImageButton.addEventListener('click', openCreatePostModal);
 
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
 
+/////////////////////////////////////////////////////////////////
+// Card Save Button Click Event
+// DESC:  Allows user to save   
+// NOTE:  CURRENTLY NOT IN USE
+/////////////////////////////////////////////////////////////////
 function onSaveButtonClicked(event) {
   console.log('clicked');
+  if ('caches' in window) {
+    caches.open('user_requested')
+      .then(function(cache) {
+        cache.add('https://httpbin.org/get');
+        cache.add('/src/images/sf-boat.jpg')
+      });
+  }
 }
 
 function createCard() {
@@ -52,10 +64,19 @@ function createCard() {
   cardSupportingText.className = 'mdl-card__supporting-text';
   cardSupportingText.textContent = 'In San Francisco';
   cardSupportingText.style.textAlign = 'center';
-  var cardSaveButton = document.createElement('button');
-  cardSaveButton.textContent = 'Save';
-  cardSaveButton.addEventListener('click', onSaveButtonClicked);
-  cardSupportingText.appendChild(cardSaveButton);
+  
+  /////////////////////////////////////////////////////////////////
+  // BEGIN: Card Save Button Functionality
+  /////////////////////////////////////////////////////////////////
+  // var cardSaveButton = document.createElement('button');
+  // cardSaveButton.textContent = 'Save';
+  // cardSaveButton.addEventListener('click', onSaveButtonClicked);
+  // cardSupportingText.appendChild(cardSaveButton);
+  /////////////////////////////////////////////////////////////////
+  // END: Card Save Button Functionality
+  /////////////////////////////////////////////////////////////////
+
+
   cardWrapper.appendChild(cardSupportingText);
   componentHandler.upgradeElement(cardWrapper);
   sharedMomentsArea.appendChild(cardWrapper);
