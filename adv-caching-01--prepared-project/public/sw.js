@@ -75,8 +75,22 @@ self.addEventListener('activate', function(event) {
 // CACHE ONLY STRATEGY
 // (not recommended)
 /////////////////////////////////////////////////
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     caches.match(event.request)
+//   );
+// });
+
+//////////////////////////////////////////////////
+// NETWORK ONLY STRATEGY 
+// ( Not recommended and not needed. 
+//   Just disable the service worker and all
+//   requests will become network requests
+//   from the HTML page, etc.
+// )
+/////////////////////////////////////////////////
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
   );
 });
