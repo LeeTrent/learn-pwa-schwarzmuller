@@ -1,6 +1,7 @@
 
-var CACHE_STATIC_NAME = 'static-v8';
+var CACHE_STATIC_NAME  = 'static-v9';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
+var OFFLINE_PAGE_NAME  = '/offline.html';
 
 self.addEventListener('install', function(event) {
   console.log('[Service Worker] Installing Service Worker ...', event);
@@ -11,6 +12,7 @@ self.addEventListener('install', function(event) {
         cache.addAll([
           '/',
           '/index.html',
+          '/offline.html',
           '/src/js/app.js',
           '/src/js/feed.js',
           '/src/js/promise.js',
@@ -59,6 +61,10 @@ self.addEventListener('fetch', function(event) {
                 })
             })
             .catch(function(err) {
+              return caches.open(CACHE_STATIC_NAME)
+                .then(function(cache) {
+                  return cache.match(OFFLINE_PAGE_NAME)
+                });
 
             });
         }
