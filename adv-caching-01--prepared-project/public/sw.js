@@ -1,6 +1,7 @@
 
-var CACHE_STATIC_NAME  = 'lee-static-v001';
-var CACHE_DYNAMIC_NAME = 'lee-dynamic-v001';
+var CACHE_STATIC_NAME  = 'lee-static-v002';
+var CACHE_DYNAMIC_NAME = 'lee-dynamic-v002';
+var HELP_URI           = '/help';
 var OFFLINE_PAGE_NAME  = '/offline.html';
 
 self.addEventListener('install', function(event) {
@@ -105,7 +106,9 @@ self.addEventListener('fetch', function(event) {
             .catch(function(err) {
               return caches.open(CACHE_STATIC_NAME)
                 .then(function(cache) {
-                  return cache.match(OFFLINE_PAGE_NAME)
+                  if (event.request.url.indexOf(HELP_URI)) {
+                    return cache.match(OFFLINE_PAGE_NAME)
+                  }
                 });
             });
         }
