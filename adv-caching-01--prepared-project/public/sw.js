@@ -1,6 +1,6 @@
 
-var CACHE_STATIC_NAME  = 'static-v9';
-var CACHE_DYNAMIC_NAME = 'dynamic-v2';
+var CACHE_STATIC_NAME  = 'lee-static-v001';
+var CACHE_DYNAMIC_NAME = 'lee-dynamic-v001';
 var OFFLINE_PAGE_NAME  = '/offline.html';
 
 self.addEventListener('install', function(event) {
@@ -71,6 +71,49 @@ self.addEventListener('activate', function(event) {
 //   );
 // });
 
+self.addEventListener('fetch', function(event) {
+  var url = 'https://httpbin.org/get';
+  
+  if (event.request.url.indexOf(url) > -1) {
+    // CACHE, THEN NETWORK STRATEGY
+    event.respondWith(
+      caches.open(CACHE_DYNAMIC_NAME)
+        .then(function(cache) {
+          return fetch(event.request)
+            .then(function(response) {
+              cache.put(event.request, response.clone());
+              return response;
+            });
+        })
+    );
+  } else {
+    // CACHE WITH NETWORK FALLBACK STRATEGY
+    event.respondWith(
+      caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        } else {
+          return fetch(event.request)
+            .then(function(res) {
+              return caches.open(CACHE_DYNAMIC_NAME)
+                .then(function(cache) {
+                  cache.put(event.request.url, res.clone());
+                  return res;
+                })
+            })
+            .catch(function(err) {
+              return caches.open(CACHE_STATIC_NAME)
+                .then(function(cache) {
+                  return cache.match(OFFLINE_PAGE_NAME)
+                });
+            });
+        }
+      })
+    );
+  }
+});
+
 //////////////////////////////////////////////////
 // CACHE ONLY STRATEGY
 // (not recommended)
@@ -90,11 +133,11 @@ self.addEventListener('activate', function(event) {
 //   from the HTML page, etc.
 // )
 /////////////////////////////////////////////////
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    fetch(event.request)
-  );
-});
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     fetch(event.request)
+//   );
+// });
 
 //////////////////////////////////////////////////
 // NETWORK WITH CACHE FALLBACK STRATEGY
@@ -113,18 +156,18 @@ self.addEventListener('fetch', function(event) {
 // NETWORK WITH CACHE FALLBACK AND DYNAMIC CACHING
 // STRATEGY (not recommended)
 /////////////////////////////////////////////////
-self.addEventListener('fetch', function(event) {
-  event.respondWith (
-    fetch(event.request)
-      .then(function(resp) {
-        return caches.open(CACHE_DYNAMIC_NAME)
-                  .then(function(cache) {
-                    cache.put(event.request.url, resp.clone());
-                    return resp;
-                  })
-      })
-      .catch(function(error) {
-        return caches.match(event.request);
-      })
-  );
-});
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith (
+//     fetch(event.request)
+//       .then(function(resp) {
+//         return caches.open(CACHE_DYNAMIC_NAME)
+//                   .then(function(cache) {
+//                     cache.put(event.request.url, resp.clone());
+//                     return resp;
+//                   })
+//       })
+//       .catch(function(error) {
+//         return caches.match(event.request);
+//       })
+//   );
+// });
