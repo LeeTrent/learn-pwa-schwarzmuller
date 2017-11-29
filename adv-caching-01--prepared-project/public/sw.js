@@ -83,7 +83,8 @@ self.addEventListener('activate', function(event) {
 
 //////////////////////////////////////////////////
 // NETWORK ONLY STRATEGY 
-// ( Not recommended and not needed. 
+// ( 
+//   Not recommended and not needed. 
 //   Just disable the service worker and all
 //   requests will become network requests
 //   from the HTML page, etc.
@@ -92,5 +93,18 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     fetch(event.request)
+  );
+});
+
+//////////////////////////////////////////////////
+// NETWORK WITH CACHE FALLBACK STRATEGY
+// (not recommended)
+/////////////////////////////////////////////////
+self.addEventListener('fetch', function(event) {
+  event.respondWith (
+    fetch(event.request)
+      .catch(function(error) {
+        return caches.match(event.request);
+      })
   );
 });
