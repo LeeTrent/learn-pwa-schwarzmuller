@@ -100,9 +100,29 @@ self.addEventListener('fetch', function(event) {
 // NETWORK WITH CACHE FALLBACK STRATEGY
 // (not recommended)
 /////////////////////////////////////////////////
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith (
+//     fetch(event.request)
+//       .catch(function(error) {
+//         return caches.match(event.request);
+//       })
+//   );
+// });
+
+//////////////////////////////////////////////////
+// NETWORK WITH CACHE FALLBACK AND DYNAMIC CACHING
+// STRATEGY (not recommended)
+/////////////////////////////////////////////////
 self.addEventListener('fetch', function(event) {
   event.respondWith (
     fetch(event.request)
+      .then(function(resp) {
+        return caches.open(CACHE_DYNAMIC_NAME)
+                  .then(function(cache) {
+                    cache.put(event.request.url, resp.clone());
+                    return resp;
+                  })
+      })
       .catch(function(error) {
         return caches.match(event.request);
       })
