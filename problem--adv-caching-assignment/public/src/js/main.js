@@ -25,6 +25,7 @@ fetch('https://httpbin.org/ip')
   .then(function(data) {
     console.log(data.origin);
     box.style.height = (data.origin.substr(0, 2) * 5) + 'px';
+    console.log('box.style.height: ' + box.style.height);
   });
 
 // 1) Identify the strategy we currently use in the Service Worker (for caching)
