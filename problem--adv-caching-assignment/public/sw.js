@@ -1,6 +1,6 @@
 
-var CACHE_STATIC_NAME = 'static-v4';
-var CACHE_DYNAMIC_NAME = 'dynamic-v4';
+var CACHE_STATIC_NAME = 'static-v6';
+var CACHE_DYNAMIC_NAME = 'dynamic-v6';
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
@@ -81,8 +81,29 @@ self.addEventListener('activate', function(event) {
 // CACHING STRATEGY:
 // CACHE ONLY (not recommended)
 /////////////////////////////////////////////////
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     caches.match(event.request)
+//   );
+// });
+
+////////////////////////////////////////////////////
+// CACHING STRATEGY:
+// NETWORK WITH CACHE FALLBACK PLUS DYNAMIC CACHING
+// (not recommended)
+///////////////////////////////////////////////////
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
+  event.respondWith (
+    fetch(event.request)
+      .then(function(response) {
+        return caches.open(CACHE_DYNAMIC_NAME)
+          .then(function(cache) {
+            cache.put(event.request.url, response.clone());
+            return response;
+          });
+      })    
+      .catch(function(error) {
+        return caches.match(event.request);
+      })
   );
 });
