@@ -1,6 +1,6 @@
 
-var CACHE_STATIC_NAME = 'static-v3';
-var CACHE_DYNAMIC_NAME = 'dynamic-v3';
+var CACHE_STATIC_NAME = 'static-v4';
+var CACHE_DYNAMIC_NAME = 'dynamic-v4';
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
@@ -71,8 +71,18 @@ self.addEventListener('activate', function(event) {
 //   from the HTML page, etc.
 // )
 ////////////////////////////////////////////////////
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     fetch(event.request)
+//   );
+// });
+
+//////////////////////////////////////////////////
+// CACHING STRATEGY:
+// CACHE ONLY (not recommended)
+/////////////////////////////////////////////////
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    fetch(event.request)
+    caches.match(event.request)
   );
 });
