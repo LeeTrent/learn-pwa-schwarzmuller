@@ -91,51 +91,51 @@ function isInArray(string, array) {
 //  - Cache only 
 // (all of these, with appropriate URL selection)
 /////////////////////////////////////////////////////
-self.addEventListener('fetch', function (event) {
-  var url = 'https://httpbin.org/get';
-  if (event.request.url.indexOf(url) > -1) {
-    event.respondWith(
-      caches.open(CACHE_DYNAMIC_NAME)
-        .then(function (cache) {
-          return fetch(event.request)
-            .then(function (res) {
-              cache.put(event.request, res.clone());
-              return res;
-            });
-        })
-    );
-  } else if (isInArray(event.request.url, STATIC_FILES)) {
-    event.respondWith(
-      caches.match(event.request)
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request)
-        .then(function (response) {
-          if (response) {
-            return response;
-          } else {
-            return fetch(event.request)
-              .then(function (res) {
-                return caches.open(CACHE_DYNAMIC_NAME)
-                  .then(function (cache) {
-                    cache.put(event.request.url, res.clone());
-                    return res;
-                  })
-              })
-              .catch(function (err) {
-                return caches.open(CACHE_STATIC_NAME)
-                  .then(function (cache) {
-                    if (event.request.headers.get('accept').includes('text/html')) {
-                      return cache.match('/offline.html');
-                    }
-                  });
-              });
-          }
-        })
-    );
-  }
-});
+// self.addEventListener('fetch', function (event) {
+//   var url = 'https://httpbin.org/get';
+//   if (event.request.url.indexOf(url) > -1) {
+//     event.respondWith(
+//       caches.open(CACHE_DYNAMIC_NAME)
+//         .then(function (cache) {
+//           return fetch(event.request)
+//             .then(function (res) {
+//               cache.put(event.request, res.clone());
+//               return res;
+//             });
+//         })
+//     );
+//   } else if (isInArray(event.request.url, STATIC_FILES)) {
+//     event.respondWith(
+//       caches.match(event.request)
+//     );
+//   } else {
+//     event.respondWith(
+//       caches.match(event.request)
+//         .then(function (response) {
+//           if (response) {
+//             return response;
+//           } else {
+//             return fetch(event.request)
+//               .then(function (res) {
+//                 return caches.open(CACHE_DYNAMIC_NAME)
+//                   .then(function (cache) {
+//                     cache.put(event.request.url, res.clone());
+//                     return res;
+//                   })
+//               })
+//               .catch(function (err) {
+//                 return caches.open(CACHE_STATIC_NAME)
+//                   .then(function (cache) {
+//                     if (event.request.headers.get('accept').includes('text/html')) {
+//                       return cache.match('/offline.html');
+//                     }
+//                   });
+//               });
+//           }
+//         })
+//     );
+//   }
+// });
 
 //////////////////////////////////////////////////
 // CACHE ONLY STRATEGY
