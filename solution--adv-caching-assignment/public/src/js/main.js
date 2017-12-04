@@ -18,41 +18,6 @@ button.addEventListener('click', function(event) {
   }
 });
 
-// var networkResponseReceived = false;
-// var url = 'https://httpbin.org/ip';
-// fetch(url)
-//   .then(function(res) {
-//     return res.json();
-//   })
-//   .then(function(data) {
-//     networkResponseReceived = true;
-//     console.log('[main.js] fetch/networkResponseReceived: ' + networkResponseReceived);
-//     console.log('[main.js] fetch/data: ' + data);
-//     console.log('[main.js] fetch/data.origin: ' + data.origin);
-//     box.style.height = (data.origin.substr(0, 2) * 5) + 'px';
-//     console.log('box.style.height: ' + box.style.height);
-//   });
-  
-//   ///////////////////////////////
-//   // CACHE, THEN NETWORK STRATEGY
-//   ///////////////////////////////
-//   if ('caches' in window) {
-//     caches.match(url)
-//     .then(function(response) {
-//       if (response) {
-//         return response.json();
-//       }
-//     })
-//     .then(function(data) {
-//       console.log('[main.js] cache/networkResponseReceived: ' + networkResponseReceived);
-//       console.log('[main.js] cache/data: ' + data);
-//       if ( ! networkResponseReceived && data) {
-//         box.style.height = (data.origin.substr(0, 2) * 20) + 'px';
-//         console.log('box.style.height: ' + box.style.height);
-//       }
-//     });
-//   }
-
 var url = 'https://httpbin.org/ip';
 var networkResponseReceived = false;
 
@@ -62,8 +27,6 @@ fetch(url)
   })
   .then(function(data) {
     networkResponseReceived = true;
-    console.log('[main.js] from network (data): ', data);
-    console.log('[main.js] from network (data.origin): ', data.origin);
     console.log(data.origin);
     box.style.height = (data.origin.substr(0, 2) * 5) + 'px';
   });
@@ -76,17 +39,15 @@ if ('caches' in window) {
       }
     })
     .then(function(data) {
-      console.log('[main.js] from cache (networkResponseReceived): ', networkResponseReceived);
-      console.log('[main.js] from cache (data): ', data);
-      console.log('[main.js] from cache (data.origin): ', data.origin);
+      console.log('From cache', data);
       if (!networkResponseReceived) {
         box.style.height = (data.origin.substr(0, 2) * 20) + 'px';
       }
     });
 }
 
-
 // 1) Identify the strategy we currently use in the Service Worker (for caching)
+// Cache, fallback to network (with dynamic caching)
 // 2) Replace it with a "Network only" strategy => Clear Storage (in Dev Tools), reload & try using your app offline
 // 3) Replace it with a "Cache only" strategy => Clear Storage (in Dev Tools), reload & try using your app offline
 // 4) Replace it with "Network, cache fallback" strategy =>  => Clear Storage (in Dev Tools), reload & try using your app offline
