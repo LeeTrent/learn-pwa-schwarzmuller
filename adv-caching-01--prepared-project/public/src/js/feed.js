@@ -19,8 +19,19 @@ function openCreatePostModal() {
     });
 
     deferredPrompt = null;
-  }
-}
+  }  
+  //////////////////////////////////////////////////////////
+  // UNREGISTER SERVICE WORKER
+  //////////////////////////////////////////////////////////
+  // if ('serviceWorker' in navigator) {
+  //   navigator.serviceWorker.getRegistrations()
+  //     .then(function(registrations) {
+  //       for ( var ii = 0; ii < registrations.length; ii++) {
+  //         registrations[ii].unregister();
+  //       }
+  //     })
+  // }
+ }
 
 function closeCreatePostModal() {
   createPostArea.style.display = 'none';

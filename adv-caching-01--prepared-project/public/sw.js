@@ -1,6 +1,6 @@
 
-var CACHE_STATIC_NAME  = 'static-v03';
-var CACHE_DYNAMIC_NAME = 'dynamic-v03';
+var CACHE_STATIC_NAME  = 'static-v04';
+var CACHE_DYNAMIC_NAME = 'dynamic-v04';
 var HELP_URI           = '/help';
 var OFFLINE_PAGE_NAME  = '/offline.html';
 var STATIC_FILES = [
