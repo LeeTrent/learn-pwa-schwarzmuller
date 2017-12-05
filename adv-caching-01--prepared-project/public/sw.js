@@ -1,6 +1,6 @@
 
-var CACHE_STATIC_NAME  = 'static-v001';
-var CACHE_DYNAMIC_NAME = 'dynamic-v001';
+var CACHE_STATIC_NAME  = 'static-v03';
+var CACHE_DYNAMIC_NAME = 'dynamic-v03';
 var HELP_URI           = '/help';
 var OFFLINE_PAGE_NAME  = '/offline.html';
 var STATIC_FILES = [
@@ -58,6 +58,7 @@ self.addEventListener('fetch', function(event) {
             .then(function(res) {
               return caches.open(CACHE_DYNAMIC_NAME)
                 .then(function(cache) {
+                  trimCache(CACHE_DYNAMIC_NAME, 4);
                   cache.put(event.request.url, res.clone());
                   return res;
                 })
@@ -72,6 +73,19 @@ self.addEventListener('fetch', function(event) {
       })
   );
 });
+
+function trimCache(cacheName, maxItems) {
+  caches.open(cacheName)
+    .then(function(cache) {
+      return cache.keys()
+        .then(function(keys) {
+          if (keys.length > maxItems) {
+            cache.delete(keys[0])
+              .then(trimCache(cacheName, maxItems));
+          }
+      });
+    });   
+}
 
 function isInArray(string, array) {
   var cachePath;
@@ -99,6 +113,7 @@ function isInArray(string, array) {
 //         .then(function (cache) {
 //           return fetch(event.request)
 //             .then(function (res) {
+//               trimCache(CACHE_DYNAMIC_NAME, 4);  
 //               cache.put(event.request, res.clone());
 //               return res;
 //             });
@@ -119,6 +134,7 @@ function isInArray(string, array) {
 //               .then(function (res) {
 //                 return caches.open(CACHE_DYNAMIC_NAME)
 //                   .then(function (cache) {
+//                     trimCache(CACHE_DYNAMIC_NAME, 4);
 //                     cache.put(event.request.url, res.clone());
 //                     return res;
 //                   })
@@ -185,6 +201,7 @@ function isInArray(string, array) {
 //       .then(function(resp) {
 //         return caches.open(CACHE_DYNAMIC_NAME)
 //                   .then(function(cache) {
+//                     trimCache(CACHE_DYNAMIC_NAME, 4);
 //                     cache.put(event.request.url, resp.clone());
 //                     return resp;
 //                   })
