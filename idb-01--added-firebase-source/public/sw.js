@@ -1,3 +1,5 @@
+importScripts('/src/js/idb.js');
+
 var CACHE_STATIC_NAME = 'fb-static-v01';
 var CACHE_DYNAMIC_NAME = 'fb-dynamic-v01';
 var STATIC_FILES = [
