@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 
-var CACHE_STATIC_NAME = 'fb-static-v02';
-var CACHE_DYNAMIC_NAME = 'fb-dynamic-v02';
+var CACHE_STATIC_NAME = 'idb-static-v03';
+var CACHE_DYNAMIC_NAME = 'idb-dynamic-v03';
 var STATIC_FILES = [
   '/',
   '/index.html',
@@ -80,16 +80,25 @@ self.addEventListener('fetch', function (event) {
 
   var url = 'https://lee-pwagram.firebaseio.com/posts';
   if (event.request.url.indexOf(url) > -1) {
-    event.respondWith(
-      caches.open(CACHE_DYNAMIC_NAME)
-        .then(function (cache) {
-          return fetch(event.request)
-            .then(function (res) {
-              // trimCache(CACHE_DYNAMIC_NAME, 3);
-              cache.put(event.request, res.clone());
-              return res;
+    event.respondWith(fetch(event.request)
+        .then(function(res) {
+          var clonedRes = res.clone();
+          clonedRes.json()
+            .then(function(data) {
+              console.log(data);
+              for (var key in data) {
+                console.log(key);
+                dbPromise
+                  .then(function(db) {
+                    var tx = db.transaction('posts', 'readwrite');
+                    var store = tx.objectStore('posts');
+                    store.put(data[key]);
+                    return tx.complete;
+                  });
+              }
             });
-        })
+          return res;
+         })
     );
   } else if (isInArray(event.request.url, STATIC_FILES)) {
     event.respondWith(
