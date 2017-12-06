@@ -1,5 +1,5 @@
-var CACHE_STATIC_NAME = 'static-v15';
-var CACHE_DYNAMIC_NAME = 'dynamic-v2';
+var CACHE_STATIC_NAME = 'fb-static-v01';
+var CACHE_DYNAMIC_NAME = 'fb-dynamic-v01';
 var STATIC_FILES = [
   '/',
   '/index.html',
@@ -69,7 +69,7 @@ function isInArray(string, array) {
 }
 self.addEventListener('fetch', function (event) {
 
-  var url = 'https://pwagram-99adf.firebaseio.com/posts';
+  var url = 'https://lee-pwagram.firebaseio.com/posts';
   if (event.request.url.indexOf(url) > -1) {
     event.respondWith(
       caches.open(CACHE_DYNAMIC_NAME)
