@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 
-var CACHE_STATIC_NAME = 'fb-static-v01';
-var CACHE_DYNAMIC_NAME = 'fb-dynamic-v01';
+var CACHE_STATIC_NAME = 'fb-static-v02';
+var CACHE_DYNAMIC_NAME = 'fb-dynamic-v02';
 var STATIC_FILES = [
   '/',
   '/index.html',
@@ -19,6 +19,12 @@ var STATIC_FILES = [
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
 ];
+
+var dbPromise = idb.open('posts-store', 1, function(db) {
+  if ( ! db.objectStoreNames.contains('posts') ) {
+    db.createObjectStore('posts', {keyPath: 'id'});
+  }
+});
 
 // function trimCache(cacheName, maxItems) {
 //   caches.open(cacheName)
