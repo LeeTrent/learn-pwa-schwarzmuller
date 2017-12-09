@@ -34,3 +34,17 @@ function clearAllData(dataStore) {
             return tx.complete;
         });
 }
+
+function deleteDataItem(dataStore, id) {
+    console.log('deleteDataItem: ' + dataStore + " / " + id);
+    dbPromise
+        .then(function(db) {
+            var tx = db.transaction(dataStore, 'readwrite');
+            var objStore = tx.objectStore(dataStore);
+            objStore.delete(id);
+            return tx.complete;
+        })
+        .then(function() {
+            console.log("Item with ID of '" + id + "' has been deleted");
+        });
+}
