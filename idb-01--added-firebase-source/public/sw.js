@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'idb-static-v04';
+var CACHE_STATIC_NAME = 'idb-static-v05';
 var CACHE_DYNAMIC_NAME = 'idb-dynamic-v04';
 var STATIC_FILES = [
   '/',
@@ -64,7 +64,7 @@ self.addEventListener('activate', function (event) {
 function isInArray(string, array) {
   var cachePath;
   if (string.indexOf(self.origin) === 0) { // request targets domain where we serve the page from (i.e. NOT a CDN)
-    console.log('matched ', string);
+    //console.log('matched ', string);
     cachePath = string.substring(self.origin.length); // take the part of the URL AFTER the domain (e.g. after localhost:8080)
   } else {
     cachePath = string; // store the full request (for CDNs)
@@ -78,11 +78,12 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(fetch(event.request)
         .then(function(res) {
           var clonedRes = res.clone();
-          clonedRes.json()
+          clearAllData('posts')
+            .then(function() {
+              return clonedRes.json()
+            })
             .then(function(data) {
-              console.log(data);
               for (var key in data) {
-                console.log(key);
                 writeData('posts', data[key]);
               }
             });

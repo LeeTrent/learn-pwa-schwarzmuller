@@ -80,7 +80,7 @@ function createCard(data) {
   // cardSaveButton.addEventListener('click', onSaveButtonClicked);
   // cardSupportingText.appendChild(cardSaveButton);
   cardWrapper.appendChild(cardSupportingText);
-  componentHandler.upgradeElement(cardWrapper);
+  //componentHandler.upgradeElement(cardWrapper);
   sharedMomentsArea.appendChild(cardWrapper);
 }
 
@@ -100,7 +100,7 @@ fetch(url)
   })
   .then(function(data) {
     networkDataReceived = true;
-    console.log('From web', data);
+    console.log('[feed.js] fetch ...', data);
     var dataArray = [];
     for (var key in data) {
       dataArray.push(data[key]);
@@ -109,10 +109,11 @@ fetch(url)
   });
 
 if ('indexedDB' in window) {
+  console.log('[feed.js] Calling readAllData');
   readAllData('posts')
     .then(function(data) {
       if ( !networkDataReceived) {
-        console.log("From indexedDB ...". data);
+        console.log('[feed.js/] indexedDB ...', data);
         updateUI(data);
       }
     });

@@ -5,6 +5,7 @@ var dbPromise = idb.open('posts-store', 1, function(db) {
   });
 
 function writeData(dataStore, data) {
+   console.log('writeData: ' + dataStore);
    return dbPromise
     .then(function(db) {
         var tx = db.transaction(dataStore, 'readwrite');
@@ -14,6 +15,7 @@ function writeData(dataStore, data) {
     });   
 } 
 function readAllData(dataStore) {
+    console.log('readAllData: ' + dataStore);
     return dbPromise
         .then(function(db) {
             var tx = db.transaction(dataStore, 'readonly');
@@ -21,3 +23,14 @@ function readAllData(dataStore) {
             return objStore.getAll();
         });
 }     
+
+function clearAllData(dataStore) {
+    console.log('clearAllData: ' + dataStore);
+    return dbPromise
+        .then(function(db) {
+            var tx = db.transaction(dataStore, 'readwrite');
+            var objStore = tx.objectStore(dataStore);
+            objStore.clear();
+            return tx.complete;
+        });
+}
