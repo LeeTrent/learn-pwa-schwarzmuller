@@ -127,6 +127,7 @@ if ('indexedDB' in window) {
 }
 
 function sendData() {
+  console.log('[feed.js][sendData]');
   fetch(url, {
     method: 'POST',
     headers: {
@@ -141,12 +142,14 @@ function sendData() {
     })
   })
   .then(function(response) {
-    console.log('sendData() / response: ', response);
+    console.log('[feed.js][sendData] response', response);
+    console.log('[feed.js][sendData] Calling [feed.js][updateUI]');
     updateUI();
   })
 }
 
 form.addEventListener('submit', function(event) {
+  console.log('[feed.js][submit]');
   event.preventDefault();
   if ( titleInput.value.trim() === ''
         || locationInput.value.trim() == '') {
@@ -162,16 +165,21 @@ form.addEventListener('submit', function(event) {
           title: titleInput.value,
           location: locationInput.value
         };
+        console.log('[feed.js][submit] Calling [utility.js][wrtieData]');
         writeData('sync-posts', post)
           .then(function() {
-            return sw.sync.register('sync-new-post');
+            console.log('[feed.js][submit] Returned from [utility.js][wrtieData]');
+            console.log("[feed.js][submit] sw.sync.register('sync-new-post')");
+            return sw.sync.register('sync-new-posts');
           })
           .then(function() {
+            console.log('[feed.js][submit] Background sync was successful/updating UI');
             var snackbarContainer = document.querySelector('#confirmation-toast');
             var msg = { message: "Your post have been saved!" };
             snackbarContainer.MaterialSnackbar.showSnackbar(msg);
           })
           .catch(function(error) {
+            console.log('[feed.js][submit] Exception encountered');
             console.log(error);
           });
       });

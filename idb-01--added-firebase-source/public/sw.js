@@ -1,8 +1,8 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'bs-static-v01';
-var CACHE_DYNAMIC_NAME = 'bs-dynamic-v01';
+var CACHE_STATIC_NAME = 'lee-static-v03';
+var CACHE_DYNAMIC_NAME = 'lee-dynamic-v03';
 var STATIC_FILES = [
   '/',
   '/index.html',
@@ -118,6 +118,51 @@ self.addEventListener('fetch', function (event) {
                     }
                   });
               });
+          }
+        })
+    );
+  }
+});
+
+self.addEventListener('sync', function(event) {
+  console.log('[sw.js][sync]:', event);
+  if (event.tag === 'sync-new-posts') {
+    console.log('[sw.js][sync]: syncing new post');
+    console.log('[sw.js][sync]: Calling [utility.js][readAllDat]');
+    event.waitUntil(
+      readAddData('sync-posts')
+        .then(function(data) {
+          console.log('[sw.js][sync]: Returning from [utility.js][readAllData]');
+          console.log('[sw.js][sync]: Iterating over data ...');
+          console.log('[sw.js][sync]: Data Item: ', dt);
+          for ( var dt of data) {
+            fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify( {
+                id: dt.id,
+                title: dt.title,
+                location: dt.location,
+                image: 'https://firebasestorage.googleapis.com/v0/b/lee-pwagram.appspot.com/o/sf-boat.jpg?alt=media&token=9a0a8dec-3c3a-4f50-848f-d2aed7edd081'
+              })
+            })
+            .then(function(response) {
+              console.log('[sw.js][sync]: Returned from server call (fetch/POST)');
+              onsole.log('[sw.js][sync]: Response', respone);
+              if (response.ok) {
+                console.log('[sw.js][sync] sync was successful:');
+                console.log('[sw.js][sync] deleting ' + dt.it + ' from IndexedDB');
+                console.log('[sw.js][sync] Calling [utility.js][deleteDataItem]');
+                deleteDataItem('sync-posts', dt.id);
+                console.log('[sw.js][sync] Returned from [utility.js][deleteDataItem]');
+              }
+            })
+            .catch(function(error) {
+              console.log('[sw.js/sync] sync failed:', error);
+            });
           }
         })
     );
